@@ -3,7 +3,7 @@ export const colors = {
   black: '#000',
   primary: {
     500: '#6AC9FF',
-    600: '#023374',
+    600: '#007CC2',
   },
   secondary: {
     400: '#4FCBD7',

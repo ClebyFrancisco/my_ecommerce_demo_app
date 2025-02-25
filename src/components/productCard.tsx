@@ -4,39 +4,32 @@ import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { colors } from '@/styles/colors';
 import { Link, useRouter } from 'expo-router';
+import { renderStars } from '@/utils/renderStars';
 
 interface ProductCardProps {
   image?: string;
   rating: number;
   title: string;
   price: number;
+  onPress: () => void;
 }
 
-const ProductCard = ({ image, rating, title, price }: ProductCardProps) => {
+const ProductCard = ({
+  image,
+  rating,
+  title,
+  price,
+  onPress,
+}: ProductCardProps) => {
   const router = useRouter();
-  const renderStars = (rating: number) => {
-    let stars = [];
-    for (let i = 0; i < 5; i++) {
-      stars.push(
-        <View
-          key={i}
-          className="mr-2  w-6 h-6 rounded-[50%] flex items-center justify-center p-0"
-          style={{
-            backgroundColor:
-              i < rating ? colors.warning[500] : colors.gray[300],
-          }}
-        >
-          <MaterialIcons name="star" size={14} color="white" />
-        </View>,
-      );
-    }
-    return stars;
-  };
 
   return (
     <TouchableOpacity
       className="w-[170] h-[314] flex flex-col overflow-hidden items-start justify-start rounded-[12px] border-2 border-gray-100  "
-      onPress={() => router.push('./catalog/product')}
+      onPress={() => {
+        onPress();
+        router.push('./catalog/product');
+      }}
     >
       <View className="w-[170] h-[170] bg-white rounded-t-[12px] overflow-hidden shadow-lg">
         <Image
@@ -57,4 +50,5 @@ const ProductCard = ({ image, rating, title, price }: ProductCardProps) => {
     </TouchableOpacity>
   );
 };
+
 export default ProductCard;

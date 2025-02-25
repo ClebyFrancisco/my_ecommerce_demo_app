@@ -5,6 +5,7 @@ import api from '@/services/api';
 import { useEffect, useState } from 'react';
 import { Loading } from '@/components/Loading';
 import { colors } from '@/styles/colors';
+import { useProducts } from '@/context/ProductsContext';
 
 type IProductsProps = {
   id: string;
@@ -17,6 +18,8 @@ type IProductsProps = {
 export default function CatalogScreen() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<IProductsProps[] | []>([]);
+
+  const { setSelectedProduct } = useProducts();
 
   const fetchData = async () => {
     setLoading(true);
@@ -53,6 +56,7 @@ export default function CatalogScreen() {
               products.map((item) => {
                 return (
                   <ProductCard
+                    onPress={() => setSelectedProduct(item)}
                     key={item.id}
                     image={item.imageUrl}
                     title={item.name}

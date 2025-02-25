@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 
 import '@/styles/global.css';
 import { Loading } from '@/components/Loading';
+import { ProductsProvider } from '@/context/ProductsContext';
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -14,10 +15,12 @@ export default function Layout() {
     <Loading />;
   }
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
+    <ProductsProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </ProductsProvider>
   );
 }

@@ -7,8 +7,11 @@ import {
 } from 'react-native';
 import { colors } from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 
 export default function CartScreen() {
+  const router = useRouter();
+
   return (
     <ImageBackground
       source={require('../../../../assets/images/Layer-blur-bg.png')}
@@ -38,7 +41,7 @@ export default function CartScreen() {
         >
           <TouchableOpacity
             className="flex-row justify-center items-center "
-            onPress={() => {}}
+            onPress={() => router.push(`/catalog`)}
           >
             <Text
               className="text-lg font-bold mr-3 "
