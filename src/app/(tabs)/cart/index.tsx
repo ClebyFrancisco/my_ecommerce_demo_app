@@ -1,10 +1,19 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import { colors } from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function CartScreen() {
   return (
-    <View className="flex-1">
+    <ImageBackground
+      source={require('../../../../assets/images/Layer-blur-bg.png')}
+      style={{ flex: 1 }}
+    >
       <View className="flex-col items-center justify-center gap-4  h-full">
         <Image
           source={require('@/assets/cart-inactive-icon.png')}
@@ -40,6 +49,6 @@ export default function CartScreen() {
           </TouchableOpacity>
         </LinearGradient>
       </View>
-    </View>
+    </ImageBackground>
   );
 }

@@ -42,7 +42,7 @@ export default function BottomNav() {
         label="Catalogo"
         isActive={(pathname == '/catalog' || pathname == '/') && !menuOpen}
         onPress={() => {
-          router.push(`./catalog`);
+          router.push(`/catalog`);
           setMenuOpen(false);
         }}
       />
@@ -51,7 +51,7 @@ export default function BottomNav() {
         label="Carrinho"
         isActive={pathname == '/cart' && !menuOpen}
         onPress={() => {
-          router.push(`./cart`);
+          router.push(`/cart`);
           setMenuOpen(false);
         }}
       />
