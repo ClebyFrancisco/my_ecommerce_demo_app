@@ -1,8 +1,13 @@
 export const colors = {
   white: '#fff',
+  black: '#000',
   primary: {
-    500: '#219ae7',
+    500: '#6AC9FF',
     600: '#023374',
+  },
+  secondary: {
+    400: '#4FCBD7',
+    500: '#28CE9C',
   },
 
   gray: {
@@ -34,7 +39,7 @@ export const colors = {
 
   warning: {
     100: '#FEF9C3',
-    500: '#FACC15',
+    500: '#FFCD48',
     600: '#EAB308',
     700: '#CA8A04',
   },
@@ -45,6 +50,4 @@ export const colors = {
     600: '#2563EB',
     700: '#1D4ED8',
   },
-
-  placeholder: '#7A4F7F',
 };

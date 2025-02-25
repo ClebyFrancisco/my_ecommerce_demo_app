@@ -1,5 +1,4 @@
 import React from 'react';
-import { colors } from '@/styles/colors';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 

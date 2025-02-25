@@ -1,7 +1,5 @@
-import { Text } from 'react-native';
-import { Redirect, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 
-import { Loading } from '@/components/Loading';
 import { colors } from '@/styles/colors';
 import Header from '@/components/Header';
 import React from 'react';
