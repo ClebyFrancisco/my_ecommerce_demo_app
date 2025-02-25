@@ -24,7 +24,7 @@ const NavItem = ({
 }: NavItemProps) => {
   return (
     <TouchableOpacity className="items-center relative" onPress={onPress}>
-      {amount_cart && (
+      {amount_cart! > 0 && (
         <View className="top-3 -right-2 z-50 ml-3 w-4 h-4 bg-red-500 rounded-[50%] flex items-center justify-center">
           <Text className="text-white text-xs text-center">{amount_cart}</Text>
         </View>

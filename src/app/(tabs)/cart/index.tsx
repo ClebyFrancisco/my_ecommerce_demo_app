@@ -1,57 +1,76 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { colors } from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { useProducts } from '@/context/ProductsContext';
+import EmptyCart from './emptyCart';
+import ProductCardHorizontal from '@/components/productCardHorizontal';
 
 export default function CartScreen() {
   const router = useRouter();
+  const { cart } = useProducts();
+
+  const totalItems = cart.length;
+  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
 
   return (
-    <ImageBackground
-      source={require('../../../../assets/images/Layer-blur-bg.png')}
-      style={{ flex: 1 }}
-    >
-      <View className="flex-col items-center justify-center gap-4  h-full">
-        <Image
-          source={require('@/assets/cart-inactive-icon.png')}
-          className="w-[100] h-[100}  top-0"
-          resizeMode="contain"
-        />
-        <Text className="font-[NotoSans] text-xl font-bold">Nenhum item</Text>
-        <Text className="text-lg">
-          Oh não! Seu carrinho está vazio. Preencha-o com brindes para concluir
-          sua compra.
-        </Text>
-        <LinearGradient
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          colors={[colors.secondary[500], colors.primary[500]]}
-          style={{
-            borderRadius: 25,
-            width: '50%',
-            paddingVertical: 16,
-            marginBottom: 20,
+    <View className="flex-1">
+      {totalItems > 0 ? (
+        <ScrollView
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+            paddingBottom: 80,
           }}
+          showsVerticalScrollIndicator={false}
         >
-          <TouchableOpacity
-            className="flex-row justify-center items-center "
-            onPress={() => router.push(`/catalog`)}
-          >
-            <Text
-              className="text-lg font-bold mr-3 "
-              style={{ color: colors.gray[100] }}
-            >
-              Go shopping
-            </Text>
-          </TouchableOpacity>
-        </LinearGradient>
-      </View>
-    </ImageBackground>
+          <Text className="font-[NotoSans] font-bold text-3xl my-4">
+            My Cart
+          </Text>
+
+          {cart.map((item) => (
+            <ProductCardHorizontal
+              id={item.id}
+              key={item.id}
+              image={item.imageUrl}
+              title={item.name}
+              rating={3}
+              price={item.price}
+            />
+          ))}
+
+          <View className="mt-6">
+            <View className="flex-row items-center justify-between mb-4">
+              <Text className="text-lg">
+                Total: {totalItems} {totalItems === 1 ? 'item' : 'itens'}
+              </Text>
+              <Text className="font-bold text-lg">R$ {totalPrice}</Text>
+            </View>
+
+            <TouchableOpacity onPress={() => router.push(`/catalog`)}>
+              <LinearGradient
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 1 }}
+                colors={[colors.secondary[500], colors.primary[500]]}
+                style={{
+                  borderRadius: 25,
+                  width: '100%',
+                  paddingVertical: 16,
+                  alignItems: 'center',
+                }}
+              >
+                <Text
+                  className="text-lg font-bold"
+                  style={{ color: colors.gray[100] }}
+                >
+                  Ir para Checkout
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      ) : (
+        <EmptyCart />
+      )}
+    </View>
   );
 }

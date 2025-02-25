@@ -19,11 +19,13 @@ const ProductsContext = createContext<{
   cart: ProductProps[];
   setSelectedProduct: React.Dispatch<React.SetStateAction<ProductProps | null>>;
   setCart: React.Dispatch<React.SetStateAction<ProductProps[]>>;
+  removeFromCart: (id: string) => void;
 }>({
   selectedProduct: null,
   cart: [],
   setSelectedProduct: () => {},
   setCart: () => {},
+  removeFromCart: () => {},
 });
 
 export function useProducts() {
@@ -43,13 +45,24 @@ export function ProductsProvider({ children }: PropsWithChildren) {
   );
   const [cart, setCart] = useState<ProductProps[]>([]);
 
+  const removeFromCart = (id: string) => {
+    console.log(id);
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  };
+
   useEffect(() => {
     console.log(cart);
   }, [cart]);
 
   return (
     <ProductsContext.Provider
-      value={{ selectedProduct, setSelectedProduct, cart, setCart }}
+      value={{
+        selectedProduct,
+        setSelectedProduct,
+        cart,
+        setCart,
+        removeFromCart,
+      }}
     >
       {children}
     </ProductsContext.Provider>
