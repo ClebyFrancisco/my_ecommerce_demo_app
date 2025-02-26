@@ -5,13 +5,23 @@ import { useRouter } from 'expo-router';
 import { useProducts } from '@/context/ProductsContext';
 import EmptyCart from './emptyCart';
 import ProductCardHorizontal from '@/components/productCardHorizontal';
+import { useSession } from '@/context/AuthContext';
 
 export default function CartScreen() {
   const router = useRouter();
   const { cart } = useProducts();
+  const { session } = useSession();
 
   const totalItems = cart.length;
   const totalPrice = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+
+  const goToCheckout = () => {
+    if (session) {
+      router.push('/checkout');
+    } else {
+      router.push({ pathname: '/login', params: { checkout: 'true' } });
+    }
+  };
 
   return (
     <View className="flex-1">
@@ -46,7 +56,7 @@ export default function CartScreen() {
               <Text className="font-bold text-lg">R$ {totalPrice}</Text>
             </View>
 
-            <TouchableOpacity onPress={() => router.push('/checkout')}>
+            <TouchableOpacity onPress={goToCheckout}>
               <LinearGradient
                 start={{ x: 1, y: 0 }}
                 end={{ x: 0, y: 1 }}

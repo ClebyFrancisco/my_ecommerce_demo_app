@@ -5,6 +5,7 @@ import { useFonts } from 'expo-font';
 import '@/styles/global.css';
 import { Loading } from '@/components/Loading';
 import { ProductsProvider } from '@/context/ProductsContext';
+import { SessionProvider } from '@/context/AuthContext';
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -15,12 +16,14 @@ export default function Layout() {
     <Loading />;
   }
   return (
-    <ProductsProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      />
-    </ProductsProvider>
+    <SessionProvider>
+      <ProductsProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        />
+      </ProductsProvider>
+    </SessionProvider>
   );
 }

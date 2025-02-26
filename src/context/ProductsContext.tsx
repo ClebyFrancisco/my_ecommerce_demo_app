@@ -45,7 +45,6 @@ export function ProductsProvider({ children }: PropsWithChildren) {
   const [cart, setCart] = useState<ProductProps[]>([]);
 
   const removeFromCart = (id: string) => {
-    console.log(id);
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 

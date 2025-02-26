@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { colors } from '@/styles/colors';
 import { useProducts } from '@/context/ProductsContext';
+import MenuExploreDrawer from './MenuExploreDrawer';
 
 type MaterialIconName = keyof typeof MaterialIcons.glyphMap;
 
@@ -25,10 +26,11 @@ const NavItem = ({
   return (
     <TouchableOpacity className="items-center relative" onPress={onPress}>
       {amount_cart! > 0 && (
-        <View className="top-3 -right-2 z-50 ml-3 w-4 h-4 bg-red-500 rounded-[50%] flex items-center justify-center">
+        <View className="top-0 absolute right-1 z-50 ml-3 w-4 h-4 bg-red-500 rounded-[50%] flex items-center justify-center">
           <Text className="text-white text-xs text-center">{amount_cart}</Text>
         </View>
       )}
+
       <MaterialIcons
         name={icon}
         size={24}
@@ -50,34 +52,40 @@ export default function BottomNav() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <View className="absolute bottom-0 w-full bg-white border-t border-gray-300 flex-row justify-around py-4">
-      <NavItem
-        icon="store"
-        label="Catalogo"
-        isActive={(pathname == '/catalog' || pathname == '/') && !menuOpen}
-        onPress={() => {
-          router.push(`/catalog`);
-          setMenuOpen(false);
-        }}
+    <>
+      <View className="absolute bottom-0 w-full bg-white border-t border-gray-300 flex-row justify-around py-4">
+        <NavItem
+          icon="store"
+          label="Catalogo"
+          isActive={(pathname == '/catalog' || pathname == '/') && !menuOpen}
+          onPress={() => {
+            router.push(`/catalog`);
+            setMenuOpen(false);
+          }}
+        />
+        <NavItem
+          icon="shopping-cart"
+          label="Carrinho"
+          isActive={pathname == '/cart' && !menuOpen}
+          amount_cart={cart.length > 0 ? cart.length : 0}
+          onPress={() => {
+            router.push(`/cart`);
+            setMenuOpen(false);
+          }}
+        />
+        <NavItem
+          icon="menu"
+          label="Menu"
+          isActive={menuOpen}
+          onPress={() => {
+            setMenuOpen(true);
+          }}
+        />
+      </View>
+      <MenuExploreDrawer
+        open={menuOpen}
+        handleClose={() => setMenuOpen(false)}
       />
-      <NavItem
-        icon="shopping-cart"
-        label="Carrinho"
-        isActive={pathname == '/cart' && !menuOpen}
-        amount_cart={cart.length > 0 ? cart.length : 0}
-        onPress={() => {
-          router.push(`/cart`);
-          setMenuOpen(false);
-        }}
-      />
-      <NavItem
-        icon="menu"
-        label="Menu"
-        isActive={menuOpen}
-        onPress={() => {
-          setMenuOpen(true);
-        }}
-      />
-    </View>
+    </>
   );
 }
