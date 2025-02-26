@@ -3,7 +3,6 @@ import {
   createContext,
   type PropsWithChildren,
   useState,
-  useEffect,
 } from 'react';
 
 type ProductProps = {
@@ -49,10 +48,6 @@ export function ProductsProvider({ children }: PropsWithChildren) {
     console.log(id);
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
-
-  useEffect(() => {
-    console.log(cart);
-  }, [cart]);
 
   return (
     <ProductsContext.Provider

@@ -46,7 +46,7 @@ export default function CartScreen() {
               <Text className="font-bold text-lg">R$ {totalPrice}</Text>
             </View>
 
-            <TouchableOpacity onPress={() => router.push(`/catalog`)}>
+            <TouchableOpacity onPress={() => router.push('/checkout')}>
               <LinearGradient
                 start={{ x: 1, y: 0 }}
                 end={{ x: 0, y: 1 }}

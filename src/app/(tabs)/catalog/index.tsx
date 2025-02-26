@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Loading } from '@/components/Loading';
 import { colors } from '@/styles/colors';
 import { useProducts } from '@/context/ProductsContext';
+import { useRouter } from 'expo-router';
 
 type IProductsProps = {
   id: string;
@@ -16,6 +17,8 @@ type IProductsProps = {
 };
 
 export default function CatalogScreen() {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<IProductsProps[] | []>([]);
 
@@ -56,7 +59,10 @@ export default function CatalogScreen() {
               products.map((item) => {
                 return (
                   <ProductCard
-                    onPress={() => setSelectedProduct(item)}
+                    onPress={() => {
+                      router.push('/cart');
+                      setSelectedProduct(item);
+                    }}
                     key={item.id}
                     image={item.imageUrl}
                     title={item.name}
