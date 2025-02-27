@@ -1,4 +1,9 @@
-import { useContext, createContext, type PropsWithChildren } from 'react';
+import {
+  useContext,
+  createContext,
+  type PropsWithChildren,
+  useState,
+} from 'react';
 import { useRouter } from 'expo-router';
 import {
   useStorageStateSession,
@@ -6,16 +11,30 @@ import {
 } from '@/storage/useStorageState';
 import api from '@/services/api';
 
+type addres = {
+  name?: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+};
+
 const AuthContext = createContext<{
   signIn: (email: string, password: string) => Promise<boolean>;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
+  userAddressShipping: addres | null;
+  setUserAddresShipping: React.Dispatch<React.SetStateAction<addres | null>>;
 }>({
   signIn: async () => false,
   signOut: () => null,
   session: null,
   isLoading: false,
+  userAddressShipping: null,
+  setUserAddresShipping: () => {},
 });
 
 export function useSession() {
@@ -31,6 +50,9 @@ export function useSession() {
 
 export function SessionProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useStorageStateSession('session');
+  const [userAddressShipping, setUserAddresShipping] = useState<addres | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useStorageStateLoading();
   const router = useRouter();
 
@@ -57,6 +79,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
           router.replace('/login');
         },
         session,
+        userAddressShipping,
+        setUserAddresShipping,
         isLoading,
       }}
     >
