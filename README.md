@@ -1,50 +1,58 @@
-# Welcome to your Expo app 👋
+# My E-commerce Demo App 🛒
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![My Demo App](/assets/images/File-Cover.png)
 
-## Get started
+Este é um aplicativo mobile de e-commerce criado com [Expo](https://expo.dev) usando [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-1. Install dependencies
+## 📌 Requisitos
 
-   ```bash
-   npm install
-   ```
+Certifique-se de ter instalado:
 
-2. Start the app
+- [Node.js](https://nodejs.org/)
+- [Yarn](https://yarnpkg.com/)
 
-   ```bash
-    npx expo start
-   ```
+Versão do Expo utilizada:
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```json
+"expo": "~52.0.37"
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🚀 Como iniciar o projeto
 
-## Learn more
+### 1️⃣ Clone o repositório
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+git clone https://github.com/ClebyFrancisco/my_ecommerce_demo_app.git
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 2️⃣ Acesse o diretório do projeto
 
-## Join the community
+```bash
+cd my_ecommerce_demo_app
+```
 
-Join our community of developers creating universal apps.
+### 3️⃣ Configure as variáveis de ambiente
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Crie um arquivo `.env` na raiz do projeto e adicione:
+
+```ini
+EXPO_PUBLIC_API_URL="http://10.0.0.136:3000"
+```
+
+> A API está disponível em [my_ecommerce_demo_api](https://github.com/ClebyFrancisco/my_ecommerce_demo_api). Siga as instruções para iniciá-la antes de rodar o app e insira a URL correta no `.env`.
+
+### 4️⃣ Instale as dependências
+
+```bash
+yarn install
+```
+
+### 5️⃣ Inicie o app
+
+```bash
+npx expo start -c
+```
+
+---
+
+Agora você pode testar o aplicativo no emulador ou no dispositivo físico usando o Expo Go! 🎉
