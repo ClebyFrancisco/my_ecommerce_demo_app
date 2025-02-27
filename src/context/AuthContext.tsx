@@ -76,6 +76,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
         signOut: () => {
           setSession(null);
+          setUserAddresShipping(null);
           router.replace('/login');
         },
         session,

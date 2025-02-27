@@ -1,5 +1,6 @@
 import { useSession } from '@/context/AuthContext';
 import { colors } from '@/styles/colors';
+import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -7,13 +8,12 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { checkout } = useLocalSearchParams();
+  const { signIn } = useSession();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const { checkout } = useLocalSearchParams();
-
-  const { signIn } = useSession();
+  const [isPasswordVisible, setPasswordVisible] = useState(false);
 
   const handleSignIn = async () => {
     try {
@@ -70,7 +70,18 @@ export default function LoginScreen() {
           placeholder="Senha"
           value={password}
           onChangeText={setPassword}
+          secureTextEntry={!isPasswordVisible}
         />
+        <TouchableOpacity
+          onPress={() => setPasswordVisible(!isPasswordVisible)}
+          className="p-3"
+        >
+          {isPasswordVisible ? (
+            <FontAwesome name="eye" size={24} color="black" />
+          ) : (
+            <FontAwesome name="eye-slash" size={24} color="black" />
+          )}
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity onPress={handleSignIn}>
@@ -98,10 +109,20 @@ export default function LoginScreen() {
         style={{ backgroundColor: colors.gray[100] }}
       >
         <Text className="text-lg font-bold">Nomes de usuário aceitos:</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setPassword('10203040');
+            setEmail('bob@example.com');
+          }}
+        >
           <Text>bob@example.com</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setPassword('10203040');
+            setEmail('alice@example.com');
+          }}
+        >
           <Text>alice@example.com</Text>
         </TouchableOpacity>
         <Text className="text-lg font-bold">Senha para todos os usuários:</Text>

@@ -3,11 +3,14 @@ import { colors } from '@/styles/colors';
 import { renderStars } from '@/utils/renderStars';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 
 export default function ProductScreen() {
   const { selectedProduct, setCart } = useProducts();
+  const router = useRouter();
+
   const [amount, setAmount] = useState(1);
 
   const handleAddToCart = () => {
@@ -21,6 +24,8 @@ export default function ProductScreen() {
 
       return prev ? [...prev, selectedProduct] : [selectedProduct];
     });
+
+    router.push('/cart');
   };
 
   return (

@@ -16,6 +16,7 @@ type IProductsProps = {
   price: number;
   imageUrl: string;
   updatedAt: string;
+  rating: number;
 };
 
 export default function CatalogScreen() {
@@ -93,7 +94,7 @@ export default function CatalogScreen() {
                     key={item.id}
                     image={item.imageUrl}
                     title={item.name}
-                    rating={3}
+                    rating={item.rating}
                     price={item.price}
                   />
                 );

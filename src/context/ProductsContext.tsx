@@ -11,6 +11,7 @@ type ProductProps = {
   description: string;
   price: number;
   imageUrl: string;
+  rating: number;
 };
 
 const ProductsContext = createContext<{

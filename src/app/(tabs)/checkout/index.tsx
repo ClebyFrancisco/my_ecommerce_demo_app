@@ -1,27 +1,55 @@
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { colors } from '@/styles/colors';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useProducts } from '@/context/ProductsContext';
 import ProductCardHorizontal from '@/components/productCardHorizontal';
 import { FontAwesome } from '@expo/vector-icons';
 import { useSession } from '@/context/AuthContext';
+import api from '@/services/api';
+import { useEffect, useState, useCallback } from 'react';
+import { Loading } from '@/components/Loading';
 
 export default function CheckoutScreen() {
   const router = useRouter();
   const { cart } = useProducts();
-  const { userAddressShipping, setUserAddresShipping } = useSession();
+  const { session, userAddressShipping, setUserAddresShipping } = useSession();
+
+  const [loading, setLoading] = useState(false);
 
   const totalItems = cart.length;
   const totalPrice = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
 
+  const fetchData = async () => {
+    if (!session || userAddressShipping) return;
+
+    setLoading(true);
+
+    try {
+      const response = await api.get('/address', {
+        headers: { Authorization: `Bearer ${session}` },
+      });
+
+      if (response.status === 200) {
+        setUserAddresShipping(response.data);
+      }
+    } catch (error) {
+      router.push('/checkout/shippingAddress');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [session]),
+  );
+
   return (
     <View className="flex-1">
       <ScrollView
-        contentContainerStyle={{
-          paddingHorizontal: 10,
-          paddingBottom: 80,
-        }}
+        contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 80 }}
         showsVerticalScrollIndicator={false}
       >
         <Text className="font-[NotoSans] font-bold text-3xl my-4">
@@ -48,27 +76,31 @@ export default function CheckoutScreen() {
             Endereço de entrega
           </Text>
           <TouchableOpacity
-            onPress={() => {
-              router.push('/checkout/shippingAddress');
-            }}
+            onPress={() => router.push('/checkout/shippingAddress')}
           >
             <FontAwesome name="pencil-square-o" size={24} color="black" />
           </TouchableOpacity>
         </View>
 
-        <View>
-          <Text>{userAddressShipping?.name}</Text>
-          <Text>
-            {userAddressShipping?.addressLine1},{' '}
-            {userAddressShipping?.addressLine2}
-          </Text>
-          <Text>
-            {userAddressShipping?.city}, {userAddressShipping?.zipCode}
-          </Text>
-          <Text>
-            {userAddressShipping?.state}, {userAddressShipping?.country}
-          </Text>
-        </View>
+        {loading ? (
+          <Loading color="red" />
+        ) : userAddressShipping ? (
+          <View>
+            <Text>{userAddressShipping.name}</Text>
+            <Text>
+              {userAddressShipping.addressLine1},{' '}
+              {userAddressShipping.addressLine2}
+            </Text>
+            <Text>
+              {userAddressShipping.city}, {userAddressShipping.zipCode}
+            </Text>
+            <Text>
+              {userAddressShipping.state}, {userAddressShipping.country}
+            </Text>
+          </View>
+        ) : (
+          <Text>Endereço não encontrado</Text>
+        )}
 
         <View className="mt-6">
           <View className="flex-row items-center justify-between mb-4">
