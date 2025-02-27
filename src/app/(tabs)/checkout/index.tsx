@@ -4,10 +4,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useProducts } from '@/context/ProductsContext';
 import ProductCardHorizontal from '@/components/productCardHorizontal';
+import { FontAwesome } from '@expo/vector-icons';
+import { useSession } from '@/context/AuthContext';
 
 export default function CheckoutScreen() {
   const router = useRouter();
   const { cart } = useProducts();
+  const { userAddressShipping, setUserAddresShipping } = useSession();
 
   const totalItems = cart.length;
   const totalPrice = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
@@ -40,6 +43,33 @@ export default function CheckoutScreen() {
           />
         ))}
 
+        <View className="flex-row items-center justify-between">
+          <Text className="font-[NotoSans] font-bold text-xl">
+            Endereço de entrega
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              router.push('/checkout/shippingAddress');
+            }}
+          >
+            <FontAwesome name="pencil-square-o" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          <Text>{userAddressShipping?.name}</Text>
+          <Text>
+            {userAddressShipping?.addressLine1},{' '}
+            {userAddressShipping?.addressLine2}
+          </Text>
+          <Text>
+            {userAddressShipping?.city}, {userAddressShipping?.zipCode}
+          </Text>
+          <Text>
+            {userAddressShipping?.state}, {userAddressShipping?.country}
+          </Text>
+        </View>
+
         <View className="mt-6">
           <View className="flex-row items-center justify-between mb-4">
             <Text className="text-lg">
@@ -48,7 +78,9 @@ export default function CheckoutScreen() {
             <Text className="font-bold text-lg">R$ {totalPrice}</Text>
           </View>
 
-          <TouchableOpacity onPress={() => router.push('/catalog')}>
+          <TouchableOpacity
+            onPress={() => router.push('/checkout/paymentMethod')}
+          >
             <LinearGradient
               start={{ x: 1, y: 0 }}
               end={{ x: 0, y: 1 }}
