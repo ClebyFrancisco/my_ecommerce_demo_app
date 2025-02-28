@@ -10,6 +10,7 @@ import {
   useStorageStateLoading,
 } from '@/storage/useStorageState';
 import api from '@/services/api';
+import { useProducts } from './ProductsContext';
 
 type addres = {
   name?: string;
@@ -55,6 +56,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   );
   const [isLoading, setIsLoading] = useStorageStateLoading();
   const router = useRouter();
+  const { setCart } = useProducts();
 
   return (
     <AuthContext.Provider
@@ -64,7 +66,38 @@ export function SessionProvider({ children }: PropsWithChildren) {
             setIsLoading(true);
             const response = await api.post('/auth/login', { email, password });
 
-            setSession(response.data.access_token);
+            const token = response.data.access_token;
+            await setSession(token);
+
+            if (!token) {
+              console.error('Token não disponível');
+              return false;
+            }
+
+            const getCart = await api.post(
+              '/carts',
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              },
+            );
+
+            const cartId = getCart.data.id;
+            const responseData = await api.get(`/carts/${cartId}`);
+
+            const products = responseData.data.items.map((item: any) => ({
+              id: item.product.id,
+              name: item.product.name,
+              description: item.product.description,
+              price: item.product.price,
+              imageUrl: item.product.imageUrl,
+              rating: item.product.rating,
+            }));
+
+            setCart(products);
+
             return true;
           } catch (error) {
             setSession(null);

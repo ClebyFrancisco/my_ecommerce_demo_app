@@ -1,4 +1,6 @@
+import { useSession } from '@/context/AuthContext';
 import { useProducts } from '@/context/ProductsContext';
+import api from '@/services/api';
 import { colors } from '@/styles/colors';
 import { renderStars } from '@/utils/renderStars';
 import { AntDesign } from '@expo/vector-icons';
@@ -8,24 +10,70 @@ import { useState } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 
 export default function ProductScreen() {
-  const { selectedProduct, setCart } = useProducts();
+  const { selectedProduct, setCart, cart } = useProducts();
   const router = useRouter();
+  const { session, userAddressShipping, setUserAddresShipping } = useSession();
 
   const [amount, setAmount] = useState(1);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!selectedProduct) return;
 
-    setCart((prev) => {
-      const isProductInCart = prev?.some(
-        (product) => product.id === selectedProduct.id,
-      );
-      if (isProductInCart) return prev;
+    const isProductInCart = cart?.some(
+      (product) => product.id === selectedProduct.id,
+    );
+    if (isProductInCart) {
+      router.push('/cart');
+      return;
+    }
 
-      return prev ? [...prev, selectedProduct] : [selectedProduct];
-    });
+    try {
+      if (session) {
+        const response = await api.post(
+          '/carts',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${session}`,
+            },
+          },
+        );
 
-    router.push('/cart');
+        const cardId = response.data.id;
+
+        await api.post('/cart-items', {
+          cartId: cardId,
+          productId: selectedProduct.id,
+          quantity: amount,
+        });
+
+        const responseData = await api.get(`/carts/${cardId}`);
+
+        const products = responseData.data.items.map((item: any) => ({
+          id: item.product.id,
+          name: item.product.name,
+          description: item.product.description,
+          price: item.product.price,
+          imageUrl: item.product.imageUrl,
+          rating: item.product.rating,
+        }));
+
+        setCart(products);
+      } else {
+        setCart((prev) => {
+          const isProductInCart = prev?.some(
+            (product) => product.id === selectedProduct.id,
+          );
+          if (isProductInCart) return prev;
+
+          return prev ? [...prev, selectedProduct] : [selectedProduct];
+        });
+      }
+
+      router.push('/cart');
+    } catch (error) {
+      console.error('Erro ao adicionar ao carrinho:', error);
+    }
   };
 
   return (

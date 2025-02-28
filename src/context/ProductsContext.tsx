@@ -1,8 +1,10 @@
+import api from '@/services/api';
 import {
   useContext,
   createContext,
   type PropsWithChildren,
   useState,
+  useEffect,
 } from 'react';
 
 type ProductProps = {
@@ -45,7 +47,8 @@ export function ProductsProvider({ children }: PropsWithChildren) {
   );
   const [cart, setCart] = useState<ProductProps[]>([]);
 
-  const removeFromCart = (id: string) => {
+  const removeFromCart = async (id: string) => {
+    api.delete(`/cart-items/${id}`);
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
