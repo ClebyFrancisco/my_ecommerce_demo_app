@@ -46,6 +46,22 @@ export default function CheckoutScreen() {
     }, [session]),
   );
 
+  const handleCreateOrder = async () => {
+    const response = await api.post(
+      '/orders',
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${session}`,
+        },
+      },
+    );
+    router.push({
+      pathname: '/checkout/paymentMethod',
+      params: { order: response.data.id },
+    });
+  };
+
   return (
     <View className="flex-1">
       <ScrollView
@@ -110,9 +126,7 @@ export default function CheckoutScreen() {
             <Text className="font-bold text-lg">R$ {totalPrice}</Text>
           </View>
 
-          <TouchableOpacity
-            onPress={() => router.push('/checkout/paymentMethod')}
-          >
+          <TouchableOpacity onPress={handleCreateOrder}>
             <LinearGradient
               start={{ x: 1, y: 0 }}
               end={{ x: 0, y: 1 }}

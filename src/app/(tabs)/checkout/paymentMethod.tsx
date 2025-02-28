@@ -1,18 +1,44 @@
+import api from '@/services/api';
 import { colors } from '@/styles/colors';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function PaymentMethod() {
   const router = useRouter();
+  const { order } = useLocalSearchParams();
 
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-  const [code, setCode] = useState('');
-  const [expirationDate, setExpirationDate] = useState('');
+  const [paymentData, setPaymentData] = useState({
+    name: '',
+    number: '',
+    code: '',
+    expirationDate: '',
+  });
 
+  const handleChange = (field: keyof typeof paymentData, value: string) => {
+    setPaymentData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCreatePayment = async () => {
+    const { name, number, code, expirationDate } = paymentData;
+
+    if (![name, number, code, expirationDate].every((field) => field.trim())) {
+      return;
+    }
+
+    try {
+      const response = await api.post(`/payments/${order}`, {
+        method: 'CARD',
+      });
+      if (response.status === 201) {
+        router.push('/checkout/checkoutCompleted');
+      }
+    } catch (error) {
+      console.error('Erro ao processar pagamento:', error);
+    }
+  };
   return (
     <View className="px-3">
       <Text className="font-[NotoSans] font-bold text-3xl my-4">Checkout</Text>
@@ -42,8 +68,8 @@ export default function PaymentMethod() {
         <TextInput
           className="flex-1 h-14"
           placeholder="Full Name On Card *"
-          value={name}
-          onChangeText={setName}
+          value={paymentData.name}
+          onChangeText={(text) => handleChange('name', text)}
         />
       </View>
       <View
@@ -56,9 +82,9 @@ export default function PaymentMethod() {
         <TextInput
           className="flex-1 h-14"
           placeholder="Card Number *"
-          value={number}
+          value={paymentData.number}
           inputMode="numeric"
-          onChangeText={setNumber}
+          onChangeText={(text) => handleChange('number', text)}
         />
       </View>
       <View className="flex-row items-center justify-between">
@@ -72,7 +98,7 @@ export default function PaymentMethod() {
           <TextInput
             className="flex-1 h-14"
             placeholder="Expiration DATE *"
-            value={expirationDate}
+            value={paymentData.expirationDate}
             maxLength={5}
             inputMode="numeric"
             onChangeText={(text) => {
@@ -81,7 +107,8 @@ export default function PaymentMethod() {
                 formattedText =
                   formattedText.slice(0, 2) + '/' + formattedText.slice(2, 4);
               }
-              setExpirationDate(formattedText);
+
+              handleChange('expirationDate', formattedText);
             }}
           />
         </View>
@@ -97,16 +124,14 @@ export default function PaymentMethod() {
             placeholder="Security Code *"
             maxLength={3}
             inputMode="numeric"
-            value={code}
-            onChangeText={setCode}
+            value={paymentData.code}
+            onChangeText={(text) => handleChange('code', text)}
           />
         </View>
       </View>
       <View></View>
 
-      <TouchableOpacity
-        onPress={() => router.push('/checkout/checkoutCompleted')}
-      >
+      <TouchableOpacity onPress={handleCreatePayment}>
         <LinearGradient
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 1 }}
